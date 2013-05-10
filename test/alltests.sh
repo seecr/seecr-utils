@@ -1,8 +1,9 @@
+#!/bin/bash
 ## begin license ##
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2012-2013 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -22,21 +23,20 @@
 #
 ## end license ##
 
-from weightless.core import compose
+export LANG=en_US.UTF-8
+export PYTHONPATH=.:"$PYTHONPATH"
+pyversions="python2.6"
+if [ -e /usr/bin/python2.7 ]; then
+    pyversions="$pyversions python2.7"
+fi
+option=$1
+if [ "${option:0:10}" == "--python2." ]; then
+    shift
+    pyversions="${option:2}"
+fi
+echo Found Python versions: $pyversions
+for pycmd in $pyversions; do
+    echo "================ $t with $pycmd _alltests.py $@ ================"
+    $pycmd _alltests.py "$@"
+done
 
-def generatorReturn(value):
-    raise StopIteration(value)
-
-def asGenerator(f):
-    def g(*args, **kwargs):
-        raise StopIteration(f(*args, **kwargs))
-        yield
-    return g
-
-def returnValueFromGenerator(g):
-    g = compose(g)
-    try:
-        while True:
-            g.next()
-    except StopIteration, e:
-        return e.args[0] if e.args else None

@@ -2,7 +2,8 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2005-2009 Seek You Too (CQ2) http://www.cq2.nl
+# Copyright (C) 2012-2013 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -22,21 +23,24 @@
 #
 ## end license ##
 
-from weightless.core import compose
+set -o errexit
+rm -rf tmp build
+mydir=$(cd $(dirname $0); pwd)
+source /usr/share/seecr-test/functions
 
-def generatorReturn(value):
-    raise StopIteration(value)
+pyversions="2.6"
+if distro_is_debian_wheezy; then
+    pyversions="2.6 2.7"
+fi
 
-def asGenerator(f):
-    def g(*args, **kwargs):
-        raise StopIteration(f(*args, **kwargs))
-        yield
-    return g
+for pyversion in $pyversions; do
+    definePythonVars $pyversion
+    echo "###### $pyversion, $PYTHON"
+    ${PYTHON} setup.py install --root tmp
+done
+cp -r test tmp/test
+removeDoNotDistribute tmp
 
-def returnValueFromGenerator(g):
-    g = compose(g)
-    try:
-        while True:
-            g.next()
-    except StopIteration, e:
-        return e.args[0] if e.args else None
+cp -r test tmp/test
+runtests "$@"
+rm -rf tmp build

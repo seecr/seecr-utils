@@ -22,21 +22,23 @@
 #
 ## end license ##
 
-from weightless.core import compose
+from seecr.test import SeecrTestCase
 
-def generatorReturn(value):
-    raise StopIteration(value)
+from seecr.utils import ensureDirectoryExists
+from os.path import isdir, join
+from os import makedirs
 
-def asGenerator(f):
-    def g(*args, **kwargs):
-        raise StopIteration(f(*args, **kwargs))
-        yield
-    return g
+class DirectoryTest(SeecrTestCase):
+    def testEnsureDirectoryExists(self):
+        existingDir = join(self.tempdir, 'existing')
+        makedirs(existingDir)
+        nonexistingDir = join(self.tempdir, 'nonexisting')
+        self.assertTrue(isdir(existingDir))
+        self.assertFalse(isdir(nonexistingDir))
+        ensureDirectoryExists(existingDir)
+        ensureDirectoryExists(nonexistingDir)
+        self.assertTrue(isdir(existingDir))
+        self.assertTrue(isdir(nonexistingDir))
 
-def returnValueFromGenerator(g):
-    g = compose(g)
-    try:
-        while True:
-            g.next()
-    except StopIteration, e:
-        return e.args[0] if e.args else None
+
+

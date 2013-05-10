@@ -2,7 +2,8 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2005-2009 Seek You Too (CQ2) http://www.cq2.nl
+# Copyright (C) 2012-2013 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -22,21 +23,19 @@
 #
 ## end license ##
 
-from weightless.core import compose
+from hotshot import Profile
+from os import system
 
-def generatorReturn(value):
-    raise StopIteration(value)
+def profile(func, name = 'main', runKCacheGrind = False):
+	prof = Profile('/tmp/' + name + '.prof', lineevents=1, linetimings=1)
+	try:
+		prof.runcall(func)
+	finally:
+		prof.close()
+	# For running KCacheGrind you need to install (aptitude):
+	# - kcachegrind
+	# - kcachegrind-convertors
+	if runKCacheGrind:
+		path = '/'.join(__file__.split('/')[:-1])
+		system('hotshot2calltree -o /tmp/%(name)s.out /tmp/%(name)s.prof; kcachegrind /tmp/%(name)s.out' % locals())
 
-def asGenerator(f):
-    def g(*args, **kwargs):
-        raise StopIteration(f(*args, **kwargs))
-        yield
-    return g
-
-def returnValueFromGenerator(g):
-    g = compose(g)
-    try:
-        while True:
-            g.next()
-    except StopIteration, e:
-        return e.args[0] if e.args else None
