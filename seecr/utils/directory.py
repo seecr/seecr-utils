@@ -6,7 +6,8 @@
 #
 ## end license ##
 
-from os.path import isdir, makedirs
+from os.path import isdir
+from os import makedirs
 
 def ensureDirectoryExists(directory):
     isdir(directory) or makedirs(directory)
