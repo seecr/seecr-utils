@@ -1,2 +1,2 @@
 python-weightless-core (>= 0.8.3)
-python-weightless-core (<< 0.9)
+python-weightless-core (<< 0.10)
