@@ -36,6 +36,7 @@ path.insert(0, '..')                            #DO_NOT_DISTRIBUTE
 import unittest
 
 from directorytest import DirectoryTest
+from debugprompttest import DebugPromptTest
 
 if __name__ == '__main__':
     unittest.main()
