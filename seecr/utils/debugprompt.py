@@ -26,8 +26,6 @@ from weightless.http import Acceptor
 from StringIO import StringIO
 from traceback import print_exc
 import sys
-from socket import AF_UNIX, socket, SOL_SOCKET, SO_REUSEADDR, SO_LINGER
-from struct import pack
 from weightless.core import identify
 
 PROMPT = "Debug >> "
