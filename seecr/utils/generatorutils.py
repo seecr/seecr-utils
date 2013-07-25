@@ -40,3 +40,12 @@ def returnValueFromGenerator(g):
             g.next()
     except StopIteration, e:
         return e.args[0] if e.args else None
+
+def asList(g):
+    return list(compose(g))
+
+def asString(g):
+    return ''.join(compose(g))
+
+def consume(g):
+    for _ in compose(g): pass
