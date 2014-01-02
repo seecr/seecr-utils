@@ -37,8 +37,8 @@ def returnValueFromGenerator(g):
     g = compose(g)
     try:
         while True:
-            g.next()
-    except StopIteration, e:
+            next(g)
+    except StopIteration as e:
         return e.args[0] if e.args else None
 
 def asList(g):
