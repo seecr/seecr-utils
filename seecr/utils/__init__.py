@@ -22,7 +22,7 @@
 #
 ## end license ##
 
-from directory import ensureDirectoryExists
-from systemutils import isRootUser
-from debugprompt import DebugPrompt
-from version import Version
+from .directory import ensureDirectoryExists
+from .systemutils import isRootUser
+from .debugprompt import DebugPrompt
+from .version import Version
