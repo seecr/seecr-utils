@@ -59,7 +59,7 @@ class DebugPrompt(object):
             self._reactor.addReader(sok, this.__next__)
             yield
             self._reactor.removeReader(sok)
-            command = sok.recv(1024).strip().decode('UTF-8')
+            command = sok.recv(1024).strip().decode()
             if not command:
                 sok.close()
                 yield
@@ -75,4 +75,4 @@ class DebugPrompt(object):
             finally:
                 sys.stdout = stdout_prev
                 sys.stderr = stderr_prev
-            response = bytes(buff.getvalue(), 'UTF-8') + PROMPT
+            response = buff.getvalue().encode() + PROMPT
