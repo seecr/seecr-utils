@@ -53,36 +53,22 @@ class DebugPromptTest(SeecrTestCase):
         try:
             sok = socket()
             sok.connect(('localhost', 9999))
-            self.assertEquals("Debug >> ", sok.recv(1024))
-            sok.send('a=5')
-            self.assertEquals("Debug >> ", sok.recv(1024))
-            sok.send("print a")
-            self.assertEquals("5\nDebug >> ", sok.recv(1024))
-            sok.send("syntax error")
-            if not python26:
-                self.assertEqualsWS("""Traceback (most recent call last):
-  File "<string>", line 1
-    syntax error
-               ^
-SyntaxError: invalid syntax
-Debug >> """, sok.recv(1024).replace("\t", "  "))
-            else:
-                self.assertEqualsWS("""Traceback (most recent call last):
-  File "<string>", line 1
-    syntax error
-               ^
-SyntaxError: unexpected EOF while parsing
-Debug >> """, sok.recv(1024).replace("\t", "  "))
-
-            sok.sendall("print dir() ")
-            self.assertEquals("['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
+            self.assertEquals(b"Debug >> ", sok.recv(1024))
+            sok.send(b'a=5')
+            self.assertEquals(b"Debug >> ", sok.recv(1024))
+            sok.send(b"print (a)")
+            self.assertEquals(b"5\nDebug >> ", sok.recv(1024))
+            sok.send(b"syntax error")
+            self.assertEquals(b'Traceback (most recent call last):\n  File "<string>", line 1\n    syntax error\n               ^\nSyntaxError: invalid syntax\nDebug >> ', sok.recv(1024))
+            sok.sendall(b"print (dir()) ")
+            self.assertEquals(b"['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
             sok.close()
 
             sok = socket()
             sok.connect(('localhost', 9999))
-            self.assertEquals("Debug >> ", sok.recv(1024))
-            sok.send("print a")
-            self.assertEquals("5\nDebug >> ", sok.recv(1024))
+            self.assertEquals(b"Debug >> ", sok.recv(1024))
+            sok.send(b"print (a)")
+            self.assertEquals(b"5\nDebug >> ", sok.recv(1024))
             sok.close()
         finally:
             stopped.append(True)
