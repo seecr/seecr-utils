@@ -26,6 +26,7 @@
 class Version(object):
     def __init__(self, versionString):
         self._versionString = versionString
+        self.asTuple() # validate
 
     def __cmp__(self, other):
         return cmp(self.asTuple(), other.asTuple())

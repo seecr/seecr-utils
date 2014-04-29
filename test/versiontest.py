@@ -32,6 +32,7 @@ class VersionTest(SeecrTestCase):
     def testVersionX(self):
         self.assertTrue(Version('1.4') <= Version('1.4.x') < Version('1.5'))
         self.assertTrue(Version('1.4.3') <= Version('1.4.x') < Version('1.5'))
+        self.assertRaises(Exception, lambda: Version('1.4.development'))
 
     def testVersionComparisons(self):
         self.assertTrue(Version('1.4') <= Version('1.4.3') < Version('1.5'))
