@@ -51,6 +51,7 @@ class VersionTest(SeecrTestCase):
         self.assertEquals(Version('1.5'), Version('1.4').nextMajorVersion())
         self.assertEquals(Version('1.5'), Version('1.4.x').nextMajorVersion())
         self.assertEquals(Version('1.5'), Version('1.4.3.2').nextMajorVersion())
+        self.assertEquals(Version('1.55'), Version('1.54.3.2').nextMajorVersion())
         self.assertRaises(Exception, lambda: Version('1').nextMajorVersion())
 
     def testVersionAsString(self):
