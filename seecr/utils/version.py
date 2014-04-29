@@ -26,23 +26,23 @@
 class Version(object):
     def __init__(self, versionString):
         self._versionString = versionString
-        self.asTuple() # validate
+        self._asTuple() # validate
 
     def __cmp__(self, other):
-        return cmp(self.asTuple(), other.asTuple())
+        return cmp(self._asTuple(), other._asTuple())
 
     def __hash__(self):
         return hash(self.__class__) ^ hash(self._versionString)
 
-    def asTuple(self):
+    def _asTuple(self):
         return tuple(asint(p) for p in self._versionString.split('.'))
 
     def majorVersion(self):
-        return '{0}.{1}'.format(*self.asTuple())
+        return Version('{0}.{1}'.format(*self._asTuple()))
 
     def nextMajorVersion(self):
-        first, second = self.asTuple()[:2]
-        return '{0}.{1}'.format(first, second + 1)
+        first, second = self._asTuple()[:2]
+        return Version('{0}.{1}'.format(first, second + 1))
 
     def __str__(self):
         return self._versionString
