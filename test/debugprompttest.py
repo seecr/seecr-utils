@@ -32,6 +32,9 @@ from seecr.test import SeecrTestCase
 from socket import socket
 from threading import Thread
 
+from sys import version_info
+python26 = version_info[0:2] == (2, 6)
+
 class DebugPromptTest(SeecrTestCase):
 
     def testOne(self):
@@ -56,7 +59,21 @@ class DebugPromptTest(SeecrTestCase):
             sok.send("print a")
             self.assertEquals("5\nDebug >> ", sok.recv(1024))
             sok.send("syntax error")
-            self.assertEquals('Traceback (most recent call last):\n  File "<string>", line 1\n     syntax error\n                ^\n SyntaxError: unexpected EOF while parsing\nDebug >> ', sok.recv(1024))
+            if not python26:
+                self.assertEqualsWS("""Traceback (most recent call last):
+  File "<string>", line 1
+    syntax error
+               ^
+SyntaxError: invalid syntax
+Debug >> """, sok.recv(1024).replace("\t", "  "))
+            else:
+                self.assertEqualsWS("""Traceback (most recent call last):
+  File "<string>", line 1
+    syntax error
+               ^
+SyntaxError: unexpected EOF while parsing
+Debug >> """, sok.recv(1024).replace("\t", "  "))
+
             sok.sendall("print dir() ")
             self.assertEquals("['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
             sok.close()
