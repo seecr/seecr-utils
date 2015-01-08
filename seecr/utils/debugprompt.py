@@ -45,7 +45,7 @@ class DebugPrompt(object):
             bindAddress='127.0.0.1')
 
     def _connect(self, sok):
-        next(self.handle_conversation(sok))
+        return self.handle_conversation(sok).__next__
 
     @identify
     def handle_conversation(self, sok):
