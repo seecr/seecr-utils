@@ -35,7 +35,7 @@ class _PacketListener(Observable):
         if type(self) is TcpPacketListener:
             while True:
                 data = sok.recv(2048)
-                if data == '':
+                if data == b'':
                     break
                 packet += data
         if remote is None:
@@ -43,7 +43,7 @@ class _PacketListener(Observable):
         try:
             self.do.handlePacket(data=packet, remote=remote)
         except Exception:
-            print >> sys.stderr, "Exception in _handlePacket for data=%s from %s" % (repr(packet), remote)
+            print("Exception in _handlePacket for data=%s from %s" % (repr(packet), remote), file=sys.stderr)
             print_exc()
             sys.stderr.flush()
         finally:

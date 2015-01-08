@@ -42,27 +42,27 @@ class VersionTest(SeecrTestCase):
         self.assertFalse(Version('1.4.2') <= Version('1.4') < Version('1.5'))
 
     def testMajorVersion(self):
-        self.assertEquals(Version('1.4'), Version('1.4').majorVersion())
-        self.assertEquals(Version('1.4'), Version('1.4.x').majorVersion())
-        self.assertEquals(Version('1.4'), Version('1.4.3.2').majorVersion())
+        self.assertEqual(Version('1.4'), Version('1.4').majorVersion())
+        self.assertEqual(Version('1.4'), Version('1.4.x').majorVersion())
+        self.assertEqual(Version('1.4'), Version('1.4.3.2').majorVersion())
         self.assertRaises(Exception, lambda: Version('1').majorVersion())
 
     def testNextMajorVersion(self):
-        self.assertEquals(Version('1.5'), Version('1.4').nextMajorVersion())
-        self.assertEquals(Version('1.5'), Version('1.4.x').nextMajorVersion())
-        self.assertEquals(Version('1.5'), Version('1.4.3.2').nextMajorVersion())
-        self.assertEquals(Version('1.55'), Version('1.54.3.2').nextMajorVersion())
+        self.assertEqual(Version('1.5'), Version('1.4').nextMajorVersion())
+        self.assertEqual(Version('1.5'), Version('1.4.x').nextMajorVersion())
+        self.assertEqual(Version('1.5'), Version('1.4.3.2').nextMajorVersion())
+        self.assertEqual(Version('1.55'), Version('1.54.3.2').nextMajorVersion())
         self.assertRaises(Exception, lambda: Version('1').nextMajorVersion())
 
     def testVersionAsString(self):
-        self.assertEquals('1.4', '%s' % Version('1.4'))
-        self.assertEquals('1.4', str(Version('1.4')))
-        self.assertEquals('1.4', '{0}'.format(Version('1.4')))
+        self.assertEqual('1.4', '%s' % Version('1.4'))
+        self.assertEqual('1.4', str(Version('1.4')))
+        self.assertEqual('1.4', '{0}'.format(Version('1.4')))
 
     def testRepr(self):
-        self.assertEquals("Version('1.4')", repr(Version('1.4')))
+        self.assertEqual("Version('1.4')", repr(Version('1.4')))
 
     def testHash(self):
-        self.assertEquals(hash(Version('1.5')), hash(Version('1.5')))
-        self.assertEquals('value', {Version('1.5'):'value'}[Version('1.5')])
+        self.assertEqual(hash(Version('1.5')), hash(Version('1.5')))
+        self.assertEqual('value', {Version('1.5'):'value'}[Version('1.5')])
 

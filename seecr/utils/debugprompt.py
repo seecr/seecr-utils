@@ -44,6 +44,10 @@ class DebugPrompt(object):
             sinkFactory=self._connect,
             bindAddress='127.0.0.1')
 
+    def shutdown(self):
+        if hasattr(self, "_acceptor"):
+            self._acceptor.shutdown()
+
     def _connect(self, sok):
         return self.handle_conversation(sok).__next__
 

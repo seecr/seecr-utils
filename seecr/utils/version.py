@@ -28,8 +28,14 @@ class Version(object):
         self._versionString = versionString
         self._asTuple() # validate
 
-    def __cmp__(self, other):
-        return cmp(self._asTuple(), other._asTuple())
+    def __eq__(self, other):
+        return self._asTuple() == other._asTuple()
+
+    def __lt__(self, other):
+        return self._asTuple() < other._asTuple()
+
+    def __le__(self, other):
+        return self._asTuple() <= other._asTuple()
 
     def __hash__(self):
         return hash(self.__class__) ^ hash(self._versionString)
@@ -51,6 +57,11 @@ class Version(object):
         return '{0}({1})'.format(self.__class__.__name__, repr(self._versionString))
 
 def asint(aString):
-    if aString == 'x':
-        return object()
-    return int(aString)
+    return IntInfinity() if aString == "x" else int(aString)
+
+IntInfinity = type('IntInfinity', (int,), {
+    '__lt__': lambda self, other: False,
+    '__gt__': lambda self, other: True,
+    '__ge__': lambda self, other: True,
+    '__le__': lambda self, other: True if self is other else False
+})

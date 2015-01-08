@@ -40,8 +40,9 @@ class DebugPromptTest(SeecrTestCase):
     def testOne(self):
         stopped = []
         reactor = Reactor()
+        debugPrompt = DebugPrompt(reactor=reactor, port=9999, globals={'reactor': reactor})
         dna = be((Observable(),
-            (DebugPrompt(reactor=reactor, port=9999, globals={'reactor': reactor}),),
+            (debugPrompt, ),
         ))
         list(compose(dna.once.observer_init()))
         def runServer():
@@ -51,25 +52,24 @@ class DebugPromptTest(SeecrTestCase):
         t.start()
 
         try:
-            sok = socket()
-            sok.connect(('localhost', 9999))
-            self.assertEqual(b"Debug >> ", sok.recv(1024))
-            sok.send(b'a=5')
-            self.assertEqual(b"Debug >> ", sok.recv(1024))
-            sok.send(b"print (a)")
-            self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
-            sok.send(b"syntax error")
-            self.assertEqual(b'Traceback (most recent call last):\n  File "<string>", line 1\n    syntax error\n               ^\nSyntaxError: invalid syntax\nDebug >> ', sok.recv(1024))
-            sok.sendall(b"print (dir()) ")
-            self.assertEqual(b"['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
-            sok.close()
+            with socket() as sok:
+                sok.connect(('localhost', 9999))
+                self.assertEqual(b"Debug >> ", sok.recv(1024))
+                sok.send(b'a=5')
+                self.assertEqual(b"Debug >> ", sok.recv(1024))
+                sok.send(b"print (a)")
+                self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
+                sok.send(b"syntax error")
+                self.assertEqual(b'Traceback (most recent call last):\n  File "<string>", line 1\n    syntax error\n               ^\nSyntaxError: invalid syntax\nDebug >> ', sok.recv(1024))
+                sok.sendall(b"print (dir()) ")
+                self.assertEqual(b"['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
 
-            sok = socket()
-            sok.connect(('localhost', 9999))
-            self.assertEqual(b"Debug >> ", sok.recv(1024))
-            sok.send(b"print (a)")
-            self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
-            sok.close()
+            with socket() as sok:
+                sok.connect(('localhost', 9999))
+                self.assertEqual(b"Debug >> ", sok.recv(1024))
+                sok.send(b"print (a)")
+                self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
         finally:
             stopped.append(True)
+            debugPrompt.shutdown()
 
