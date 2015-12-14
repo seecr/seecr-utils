@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -25,7 +25,7 @@
 
 class Version(object):
     def __init__(self, versionString):
-        self._versionString = versionString
+        self._versionString = '%s' % versionString
         self._asTuple() # validate
 
     def __cmp__(self, other):

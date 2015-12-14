@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -66,3 +66,5 @@ class VersionTest(SeecrTestCase):
         self.assertEquals(hash(Version('1.5')), hash(Version('1.5')))
         self.assertEquals('value', {Version('1.5'):'value'}[Version('1.5')])
 
+    def testVersionVersion(self):
+        self.assertEquals('1.4', '%s' % Version(Version('1.4')))
