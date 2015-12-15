@@ -24,8 +24,11 @@
 
 
 class Version(object):
-    def __init__(self, versionString):
+    def __init__(self, versionString, majorDigits=2):
         self._versionString = '%s' % versionString
+        if majorDigits < 1:
+            raise ValueError("Use majorDigits >= 1")
+        self._majorDigits = majorDigits
         self._asTuple() # validate
 
     def __cmp__(self, other):
@@ -37,12 +40,16 @@ class Version(object):
     def _asTuple(self):
         return tuple(asint(p) for p in self._versionString.split('.'))
 
+    def _asMajorList(self):
+        return (list(self._asTuple()) + [0] * self._majorDigits)[:self._majorDigits]
+
     def majorVersion(self):
-        return Version('{0}.{1}'.format(*self._asTuple()))
+        return Version('.'.join(str(v) for v in self._asMajorList()))
 
     def nextMajorVersion(self):
-        first, second = self._asTuple()[:2]
-        return Version('{0}.{1}'.format(first, second + 1))
+        versionList = self._asMajorList()
+        versionList[-1] += 1
+        return Version('.'.join(str(v) for v in versionList))
 
     def __str__(self):
         return self._versionString
