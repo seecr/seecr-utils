@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2016 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -28,28 +28,26 @@ class Version(object):
         self._versionString = '%s' % versionString
         if majorDigits < 1:
             raise ValueError("Use majorDigits >= 1")
-        self._majorDigits = majorDigits
-        self._asTuple() # validate
+        self._versionTuple = tuple(asint(p) for p in self._versionString.split('.'))
+        self._majorVersionList = (list(self._versionTuple) + [0] * majorDigits)[:majorDigits]
+        self._nextMajorVersion = self._majorVersion = None
 
     def __cmp__(self, other):
-        return cmp(self._asTuple(), other._asTuple())
+        return cmp(self._versionTuple, other._versionTuple)
 
     def __hash__(self):
         return hash(self.__class__) ^ hash(self._versionString)
 
-    def _asTuple(self):
-        return tuple(asint(p) for p in self._versionString.split('.'))
-
-    def _asMajorList(self):
-        return (list(self._asTuple()) + [0] * self._majorDigits)[:self._majorDigits]
-
     def majorVersion(self):
-        return Version('.'.join(str(v) for v in self._asMajorList()))
+        if self._majorVersion is None:
+            self._majorVersion = Version('.'.join(str(v) for v in self._majorVersionList), majorDigits=len(self._majorVersionList))
+        return self._majorVersion
 
     def nextMajorVersion(self):
-        versionList = self._asMajorList()
-        versionList[-1] += 1
-        return Version('.'.join(str(v) for v in versionList))
+        if self._nextMajorVersion is None:
+            nextMajorVersionList = self._majorVersionList[:-1] + [self._majorVersionList[-1] + 1]
+            self._nextMajorVersion = Version('.'.join(str(v) for v in nextMajorVersionList), majorDigits=len(self._majorVersionList))
+        return self._nextMajorVersion
 
     def __str__(self):
         return self._versionString
