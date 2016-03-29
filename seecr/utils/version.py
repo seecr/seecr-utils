@@ -32,6 +32,12 @@ class Version(object):
         self._majorVersionList = (list(self._versionTuple) + [0] * majorDigits)[:majorDigits]
         self._nextMajorVersion = self._majorVersion = None
 
+    @classmethod
+    def create(cls, versionString, *args, **kwargs):
+        if type(versionString) == cls:
+            return versionString
+        return cls(versionString)
+
     def __cmp__(self, other):
         return cmp(self._versionTuple, other._versionTuple)
 
