@@ -26,3 +26,4 @@ from directory import ensureDirectoryExists
 from systemutils import isRootUser
 from debugprompt import DebugPrompt
 from version import Version
+from string import string

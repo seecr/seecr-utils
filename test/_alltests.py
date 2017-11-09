@@ -39,6 +39,7 @@ from directorytest import DirectoryTest
 from debugprompttest import DebugPromptTest
 from versiontest import VersionTest
 from packetlistenertest import PacketListenerTest
+from stringstest import StringsTest
 
 if __name__ == '__main__':
     unittest.main()
