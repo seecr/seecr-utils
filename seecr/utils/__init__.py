@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013-2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2013-2014, 2017 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
