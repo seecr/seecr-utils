@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+import re
 
 class string(unicode):
 
@@ -43,3 +44,16 @@ class string(unicode):
             return self.index(i)
         return unicode.__getitem__(self, i)
 
+    def kebab(self):
+        return self.rejoin('-', unicode.lower)
+
+    def camel(self):
+        return self.rejoin('', unicode.capitalize)
+
+    def rejoin(self, sep, f):
+        return string(sep.join(f(fragment) for fragment in self.split()))
+
+    def split(self):
+        return (fragment for fragment in split.split(self) if fragment not in ('', '-', '_'))
+
+split = re.compile('([A-Z]{2,}|[A-Z]?[a-z0-9]+)[\-_]?')
