@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013-2014, 2017-2018 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2018 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -22,9 +22,21 @@
 #
 ## end license ##
 
-from directory import ensureDirectoryExists
-from systemutils import isRootUser
-from debugprompt import DebugPrompt
-from version import Version
-from string import string
-from .atomicwrite import atomic_write
+from seecr.test import SeecrTestCase
+
+from seecr.tools import atomic_write
+from os.path import isfile, join
+
+class AtomicWriteTest(SeecrTestCase):
+    def testAtomicWrite(self):
+        filename = join(self.tempdir, "testfile")
+        self.assertFalse(isfile(filename))
+        with atomic_write(filename) as fp:
+            self.assertFalse(isfile(filename))
+            self.assertTrue(isfile("{}.tmp".format(filename)))
+            fp.write("This is the test")
+            self.assertFalse(isfile(filename))
+
+        self.assertFalse(isfile("{}.tmp".format(filename)))
+        self.assertTrue(isfile(filename))
+        self.assertEqual("This is the test", open(filename).read())

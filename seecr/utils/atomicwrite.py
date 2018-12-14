@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013-2014, 2017-2018 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2018 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -22,9 +22,12 @@
 #
 ## end license ##
 
-from directory import ensureDirectoryExists
-from systemutils import isRootUser
-from debugprompt import DebugPrompt
-from version import Version
-from string import string
-from .atomicwrite import atomic_write
+from contextlib import contextmanager
+from os import rename
+
+@contextmanager
+def atomic_write(filename, mode="w", tmpPostfix=".tmp"):
+    tmp_filename = "{}{}".format(filename, tmpPostfix)
+    with open(tmp_filename, mode) as fp:
+        yield fp
+    rename(tmp_filename, filename)
