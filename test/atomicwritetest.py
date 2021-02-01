@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2018 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2018, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -24,7 +24,7 @@
 
 from seecr.test import SeecrTestCase
 
-from seecr.tools import atomic_write
+from seecr.utils import atomic_write
 from os.path import isfile, join
 
 class AtomicWriteTest(SeecrTestCase):
@@ -39,4 +39,5 @@ class AtomicWriteTest(SeecrTestCase):
 
         self.assertFalse(isfile("{}.tmp".format(filename)))
         self.assertTrue(isfile(filename))
-        self.assertEqual("This is the test", open(filename).read())
+        with open(filename) as f:
+            self.assertEqual("This is the test", f.read())

@@ -4,7 +4,7 @@
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
 # Copyright (C) 2005-2009 Seek You Too (CQ2) http://www.cq2.nl
-# Copyright (C) 2012-2014, 2017-2018 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2012-2014, 2017-2018, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -38,8 +38,6 @@ import unittest
 from atomicwritetest import AtomicWriteTest
 from directorytest import DirectoryTest
 from debugprompttest import DebugPromptTest
-from packetlistenertest import PacketListenerTest
-from stringstest import StringsTest
 
 if __name__ == '__main__':
     unittest.main()

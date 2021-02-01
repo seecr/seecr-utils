@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2013, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -23,12 +23,12 @@
 ## end license ##
 
 from weightless.http import Acceptor
-from StringIO import StringIO
+from io import StringIO
 from traceback import print_exc
 import sys
 from weightless.core import identify
 
-PROMPT = "Debug >> "
+PROMPT = b"Debug >> "
 
 class DebugPrompt(object):
 
@@ -45,18 +45,21 @@ class DebugPrompt(object):
             bindAddress='127.0.0.1')
 
     def _connect(self, sok):
-        self.handle_conversation(sok).next()
+        next(self.handle_conversation(sok))
+
+    def close(self):
+        self._acceptor.close()
 
     @identify
     def handle_conversation(self, sok):
         response = PROMPT
         this  = yield
         while True:
-            self._reactor.addWriter(sok, this.next)
+            self._reactor.addWriter(sok, this.__next__)
             yield
             self._reactor.removeWriter(sok)
             sok.sendall(response)
-            self._reactor.addReader(sok, this.next)
+            self._reactor.addReader(sok, this.__next__)
             yield
             self._reactor.removeReader(sok)
             command = sok.recv(1024).strip()
@@ -69,10 +72,10 @@ class DebugPrompt(object):
                 stderr_prev = sys.stderr
                 sys.stdout = buff
                 sys.stderr = buff
-                exec command in self._globals
+                exec(command, self._globals)
             except:
                 print_exc(limit=0)
             finally:
                 sys.stdout = stdout_prev
                 sys.stderr = stderr_prev
-            response = buff.getvalue() + PROMPT
+            response = buff.getvalue().encode() + PROMPT

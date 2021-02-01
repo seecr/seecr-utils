@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013-2014 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2013-2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -40,8 +40,9 @@ class DebugPromptTest(SeecrTestCase):
     def testOne(self):
         stopped = []
         reactor = Reactor()
+        debugprompt = DebugPrompt(reactor=reactor, port=9999, globals={'reactor': reactor})
         dna = be((Observable(),
-            (DebugPrompt(reactor=reactor, port=9999, globals={'reactor': reactor}),),
+            (debugprompt,)
         ))
         list(compose(dna.once.observer_init()))
         def runServer():
@@ -51,39 +52,31 @@ class DebugPromptTest(SeecrTestCase):
         t.start()
 
         try:
-            sok = socket()
-            sok.connect(('localhost', 9999))
-            self.assertEquals("Debug >> ", sok.recv(1024))
-            sok.send('a=5')
-            self.assertEquals("Debug >> ", sok.recv(1024))
-            sok.send("print a")
-            self.assertEquals("5\nDebug >> ", sok.recv(1024))
-            sok.send("syntax error")
-            if not python26:
+            with socket() as sok:
+                sok.connect(('localhost', 9999))
+                self.assertEqual(b"Debug >> ", sok.recv(1024))
+                sok.send(b'a=5')
+                self.assertEqual(b"Debug >> ", sok.recv(1024))
+                sok.send(b"print(a)")
+                self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
+                sok.send(b"syntax error")
                 self.assertEqualsWS("""Traceback (most recent call last):
-  File "<string>", line 1
-    syntax error
-               ^
-SyntaxError: invalid syntax
-Debug >> """, sok.recv(1024).replace("\t", "  "))
-            else:
-                self.assertEqualsWS("""Traceback (most recent call last):
-  File "<string>", line 1
-    syntax error
-               ^
-SyntaxError: unexpected EOF while parsing
-Debug >> """, sok.recv(1024).replace("\t", "  "))
+      File "<string>", line 1
+        syntax error
+                   ^
+    SyntaxError: invalid syntax
+    Debug >> """, (sok.recv(1024).decode()))
 
-            sok.sendall("print dir() ")
-            self.assertEquals("['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
-            sok.close()
+                sok.sendall(b"print(dir())")
+                self.assertEqual(b"['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))
 
-            sok = socket()
-            sok.connect(('localhost', 9999))
-            self.assertEquals("Debug >> ", sok.recv(1024))
-            sok.send("print a")
-            self.assertEquals("5\nDebug >> ", sok.recv(1024))
-            sok.close()
+            with socket() as sok:
+                sok.connect(('localhost', 9999))
+                self.assertEqual(b"Debug >> ", sok.recv(1024))
+                sok.send(b"print(a)")
+                self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
         finally:
             stopped.append(True)
+            t.join()
+            debugprompt.close()
 
