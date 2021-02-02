@@ -2,7 +2,7 @@
 #
 # "Seecr Utils" is a package with a wide range of valuable tools.
 #
-# Copyright (C) 2013-2014, 2017-2018, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 #
 # This file is part of "Seecr Utils"
 #
@@ -22,8 +22,6 @@
 #
 ## end license ##
 
-from .directory import ensureDirectoryExists
-from .systemutils import isRootUser
-from .debugprompt import DebugPrompt
-from .atomicwrite import atomic_write
-from .readdata import read_from_file
+def read_from_file(filepath):
+    with open(filepath) as fp:
+        return fp.read()
