@@ -22,6 +22,6 @@
 #
 ## end license ##
 
-def read_from_file(filepath):
-    with open(filepath) as fp:
+def read_from_file(filepath, binary=False):
+    with open(filepath, 'rb' if binary else 'r') as fp:
         return fp.read()
