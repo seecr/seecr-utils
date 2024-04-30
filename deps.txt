@@ -1,4 +1,4 @@
-python3-weightless-core (>= 0.13)
-python3-weightless-core (<< 0.14)
-python3-meresco-core (>= 4.1.1)
-python3-meresco-core (<< 4.2)
+python3-weightless-core (>= 0.14.0.1)
+python3-weightless-core (<< 0.15)
+python3-meresco-core (>= 4.2.0.1)
+python3-meresco-core (<< 4.3)

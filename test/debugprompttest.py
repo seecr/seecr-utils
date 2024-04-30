@@ -60,12 +60,13 @@ class DebugPromptTest(SeecrTestCase):
                 sok.send(b"print(a)")
                 self.assertEqual(b"5\nDebug >> ", sok.recv(1024))
                 sok.send(b"syntax error")
-                self.assertEqualsWS("""Traceback (most recent call last):
-      File "<string>", line 1
+
+                response = sok.recv(2024).decode()
+                self.assertEqualsWS("""File "<string>", line 1
         syntax error
-                   ^
+               ^^^^^
     SyntaxError: invalid syntax
-    Debug >> """, (sok.recv(1024).decode()))
+    Debug >> """, response)
 
                 sok.sendall(b"print(dir())")
                 self.assertEqual(b"['__builtins__', 'a', 'reactor']\nDebug >> ", sok.recv(8192))

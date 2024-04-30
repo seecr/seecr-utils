@@ -25,13 +25,15 @@
 
 from distutils.core import setup
 
+version = '$Version: 0$'[9:-1].strip()
+
 setup(
     name='seecr-utils',
     packages=[
         'seecr',    #DO_NOT_DISTRIBUTE
         'seecr.utils'
     ],
-    version='%VERSION%',
+    version=version,
     url='http://seecr.nl',
     author='Seecr (Seek You Too B.V.)',
     author_email='info@seecr.nl.nl',
